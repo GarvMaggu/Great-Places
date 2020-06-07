@@ -9,7 +9,7 @@ class ImageInput extends StatefulWidget {
   final Function onSelectImage;
 
   ImageInput(this.onSelectImage);
-  
+
   @override
   _ImageInputState createState() => _ImageInputState();
 }
@@ -22,10 +22,13 @@ class _ImageInputState extends State<ImageInput> {
     PickedFile image =
         await _picker.getImage(source: ImageSource.camera, maxWidth: 600);
     final File imageFile = File(image.path);
+    if (imageFile == null) {
+      return;
+    }
     setState(() {
-      _storedImage=imageFile;
+      _storedImage = imageFile;
     });
-    final appDir= await syspaths.getApplicationDocumentsDirectory();
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile.path);
     final savedImage = await imageFile.copy('${appDir.path}/$fileName');
     widget.onSelectImage(savedImage);
